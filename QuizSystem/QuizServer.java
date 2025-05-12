@@ -1046,7 +1046,7 @@
 //     private static void initializeDatabase() {
 //         String url = "jdbc:mysql://localhost:3306/quiz_system?useSSL=false&serverTimezone=UTC";
 //         String user = "root"; // Replace with your MySQL username
-//         String password = "abhigoyal@220905"; // Replace with your MySQL password
+//         String password = ""; // Replace with your MySQL password
 
 //         try {
 //             // Load the MySQL JDBC driver
