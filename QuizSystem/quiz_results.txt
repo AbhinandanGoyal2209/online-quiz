@@ -10,3 +10,39 @@ Username: arsh, Score: 0
 Username: dhruv, Score: 0
 Username: dishan, Score: 0
 ------------------------
+Quiz Results - Wed May 14 10:06:14 IST 2025
+Username: Abhi, Score: 0
+Username: dhruv, Score: 20
+Username: dishan, Score: 30
+Username: arsh, Score: 20
+------------------------
+Quiz Results - Wed May 14 10:11:41 IST 2025
+Username: abh, Score: 10
+Username: ff, Score: 0
+Username: df, Score: 10
+Username: dsf, Score: 10
+------------------------
+Quiz Results - Wed May 14 10:34:08 IST 2025
+Username: ab, Score: 10
+Username: dh, Score: 30
+Username: di, Score: 20
+Username: ar, Score: 0
+------------------------
+Quiz Results - Wed May 14 10:36:59 IST 2025
+Username: dc, Score: 0
+Username: fce, Score: 0
+Username: der, Score: 0
+Username: defwe, Score: 0
+------------------------
+Quiz Results - Wed May 14 11:05:52 IST 2025
+Username: m, Score: 10
+Username: b, Score: 20
+Username: v, Score: 20
+Username: c, Score: 20
+------------------------
+Quiz Results - Thu May 15 18:48:47 IST 2025
+Username: a, Score: 10
+Username: b, Score: 10
+Username: c, Score: 10
+Username: d, Score: 0
+------------------------
