@@ -3,17 +3,9 @@
 
 
 
-
-
-
-
-
-
-
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public class QuizClient {
     private static final String SERVER_ADDRESS = "localhost";
@@ -22,98 +14,127 @@ public class QuizClient {
     public static void main(String[] args) {
         try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress(SERVER_ADDRESS, SERVER_PORT), 5000);
-            System.out.println("Connected to server at " + SERVER_ADDRESS + ":" + SERVER_PORT);
 
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            Scanner scanner = new Scanner(System.in);
 
-            // Prompt and send username
-            System.out.print("Enter your username: ");
-            String username = scanner.nextLine().trim();
+            // Prompt for username via GUI
+            String username = JOptionPane.showInputDialog(null, "Enter your username:", "Quiz Login", JOptionPane.PLAIN_MESSAGE);
+            if (username == null) {
+                // User canceled the dialog
+                return;
+            }
+            username = username.trim();
             if (username.isEmpty()) {
                 username = "Guest";
             }
             out.println(username);
-            System.out.println("Username sent: " + username);
 
             // Handle server messages
             Thread serverListener = new Thread(() -> {
                 try {
                     String line;
                     String currentUser = null;
+                    StringBuilder questionBlock = new StringBuilder();
+                    StringBuilder leaderboardBlock = new StringBuilder();
                     boolean expectInput = false;
                     boolean quizEnded = false;
                     boolean isQuestionBlock = false;
+                    boolean isLeaderboardBlock = false;
 
                     while ((line = in.readLine()) != null) {
                         if (line.startsWith("TURN:")) {
                             currentUser = line.substring("TURN:".length());
-                            System.out.println("\n" + currentUser + "'s turn:");
                             continue;
                         } else if (line.startsWith("Question:")) {
-                            isQuestionBlock = true; // Start of question block
-                            System.out.println(line);
+                            isQuestionBlock = true;
+                            questionBlock = new StringBuilder(line).append("\n");
                             continue;
                         } else if (line.startsWith("POPUP:")) {
                             String message = line.substring("POPUP:".length());
-                            try {
+                            SwingUtilities.invokeLater(() -> {
                                 JOptionPane.showMessageDialog(null, message, "Quiz Completed", JOptionPane.INFORMATION_MESSAGE);
-                            } catch (Exception e) {
-                                System.out.println(message); // Fallback for non-GUI environments
-                            }
+                            });
                         } else if (line.equals("Thanks, your test has now completed!")) {
-                            quizEnded = true; // Stop prompting for input
-                            expectInput = false; // Ensure no further prompts
-                            System.out.println(line);
-                            break; // Exit the server listener thread
+                            quizEnded = true;
+                            expectInput = false;
+                            // Display leaderboard if collected
+                            if (leaderboardBlock.length() > 0) {
+                                final String leaderboardMessage = leaderboardBlock.toString();
+                                SwingUtilities.invokeLater(() -> {
+                                    JOptionPane.showMessageDialog(null, leaderboardMessage, "Final Leaderboard", JOptionPane.INFORMATION_MESSAGE);
+                                });
+                            }
+                            break;
                         } else if (line.startsWith("Quiz ended! Final Leaderboard:")) {
-                            quizEnded = true; // Stop prompting for input
-                            expectInput = false; // Ensure no further prompts
-                            System.out.println(line);
+                            isLeaderboardBlock = true;
+                            leaderboardBlock = new StringBuilder(line).append("\n");
                             continue;
                         } else {
-                            System.out.println(line);
+                            if (isQuestionBlock) {
+                                questionBlock.append(line).append("\n");
+                            } else if (isLeaderboardBlock) {
+                                leaderboardBlock.append(line).append("\n");
+                            }
                         }
 
                         // Detect end of question block (last option line)
                         if (isQuestionBlock && line.startsWith("4. ")) {
                             expectInput = true;
-                            isQuestionBlock = false; // End of question block
+                            isQuestionBlock = false;
                         }
 
-                        // Prompt for answer only if expecting input and quiz hasn't ended
-                        if (expectInput && !quizEnded && !line.startsWith("Invalid input") && 
-                            !line.startsWith("Correct") && !line.startsWith("Incorrect")) {
-                            System.out.print(currentUser + ", enter your answer (1-4): ");
+                        // Prompt for answer via GUI if expecting input
+                        if (expectInput && !quizEnded && !line.startsWith("Invalid input")) {
+                            String finalQuestionBlock = questionBlock.toString();
+                            String finalCurrentUser = currentUser;
+                            SwingUtilities.invokeLater(() -> {
+                                String[] options = {"1", "2", "3", "4"};
+                                String answer = (String) JOptionPane.showInputDialog(
+                                    null,
+                                    finalCurrentUser + "'s turn:\n" + finalQuestionBlock,
+                                    "Quiz Question",
+                                    JOptionPane.QUESTION_MESSAGE,
+                                    null,
+                                    options,
+                                    options[0]
+                                );
+                                if (answer != null) {
+                                    out.println(answer);
+                                } else {
+                                    // User canceled; send an invalid response to keep server expecting input
+                                    out.println("invalid");
+                                }
+                            });
+                            expectInput = false; // Prevent multiple prompts
+                        }
+
+                        // Handle invalid input
+                        if (line.startsWith("Invalid input")) {
+                            final String errorMessage = line;
+                            SwingUtilities.invokeLater(() -> {
+                                JOptionPane.showMessageDialog(null, errorMessage, "Input Error", JOptionPane.ERROR_MESSAGE);
+                            });
+                            expectInput = true; // Re-prompt for input
                         }
                     }
                 } catch (IOException e) {
-                    System.out.println("Disconnected from server: " + e.getMessage());
+                    SwingUtilities.invokeLater(() -> {
+                        JOptionPane.showMessageDialog(null, "Disconnected from server: " + e.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+                    });
                 }
             });
             serverListener.start();
 
-            // Send user input only until quiz ends
-            while (scanner.hasNextLine()) {
-                // Check if quiz has ended before prompting for input
-                if (!serverListener.isAlive()) {
-                    break; // Exit the loop if the server listener has stopped
-                }
-                String answer = scanner.nextLine();
-                out.println(answer);
-            }
-
-            scanner.close();
+           
+            serverListener.join();
         } catch (IOException e) {
-            System.err.println("Failed to connect or communicate with server. Please ensure the server is running at " + 
-                               SERVER_ADDRESS + ":" + SERVER_PORT + ". Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(null,
+                "Failed to connect or communicate with server. Please ensure the server is running at " +
+                SERVER_ADDRESS + ":" + SERVER_PORT + ". Error: " + e.getMessage(),
+                "Connection Error", JOptionPane.ERROR_MESSAGE);
+        } catch (InterruptedException e) {
+            JOptionPane.showMessageDialog(null, "Client interrupted: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
-
-
-
-
-
-

@@ -46,3 +46,54 @@ Username: b, Score: 10
 Username: c, Score: 10
 Username: d, Score: 0
 ------------------------
+Quiz Results - Thu May 15 18:59:07 IST 2025
+Username: ABhi, Score: 10
+Username: ARSh, Score: 0
+------------------------
+Quiz Results - Fri May 16 10:01:45 IST 2025
+Username: ABhi4, Score: 0
+Username: gt, Score: 40
+Username: f, Score: 30
+Username: rff, Score: 40
+------------------------
+Quiz Results - Fri May 16 10:10:21 IST 2025
+Username: A, Score: 20
+Username: g, Score: 20
+------------------------
+Quiz Results - Fri May 16 10:13:25 IST 2025
+Username: A, Score: 20
+Username: b, Score: 20
+Username: c, Score: 30
+------------------------
+Quiz Results - Fri May 16 10:18:11 IST 2025
+Username: l, Score: 0
+------------------------
+Quiz Results - Fri May 16 10:19:41 IST 2025
+Username: e, Score: 10
+------------------------
+Quiz Results - Fri May 16 10:22:35 IST 2025
+Username: Abhi, Score: 10
+Username: Arsh, Score: 10
+------------------------
+Quiz Results - Fri May 16 10:27:27 IST 2025
+Username: d, Score: 10
+Username: s, Score: 10
+------------------------
+Quiz Results - Fri May 16 10:43:18 IST 2025
+Username: a, Score: 20
+Username: s, Score: 20
+------------------------
+Quiz Results - Fri May 16 10:52:04 IST 2025
+Username: Abhi, Score: 20
+Username: Arshdeep, Score: 10
+------------------------
+Quiz Results - Fri May 16 10:56:09 IST 2025
+Username: Abhi, Score: 10
+Username: Dhruv, Score: 10
+Username: Dishan, Score: 30
+Username: Arsh, Score: 20
+------------------------
+Quiz Results - Fri May 16 11:16:00 IST 2025
+Username: Abhi, Score: 20
+Username: Arsh, Score: 20
+------------------------

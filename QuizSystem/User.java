@@ -36,7 +36,7 @@ public class User implements Comparable<User> {
 
     @Override
     public int compareTo(User other) {
-        return Integer.compare(other.score, this.score); // Max heap: higher score first
+        return Integer.compare(other.score, this.score); 
     }
 
     @Override
@@ -60,6 +60,13 @@ public class User implements Comparable<User> {
                '}';
     }
 }
+
+
+
+
+
+
+
 
 
 

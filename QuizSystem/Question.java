@@ -42,7 +42,7 @@ public class Question {
     }
 
     public String[] getOptions() {
-        return options.clone(); // Defensive copy to prevent external modification
+        return options.clone(); 
     }
 
     public boolean isCorrect(int answerIndex) {
